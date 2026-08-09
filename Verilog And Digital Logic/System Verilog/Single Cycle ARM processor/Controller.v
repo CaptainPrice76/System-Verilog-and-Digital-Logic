@@ -60,7 +60,7 @@ module condlogic(input logic  clk,reset,
                 output logic   MemWrite,
                 input logic    PCS,
                 output logic   PCSrc,
-                input logic [3:0] ALUFlags,  //->N,Z,C,V
+                input logic [3:0] ALUFlags,  //N,Z,C,V
                 input logic [1:0] FLagW,
                     ) 
 
@@ -69,7 +69,7 @@ logic [3:0] Flags;
 logic       CondEx;
 
 flopenr #(2) flagreg1(clk, reset, FlagWrite[1],
-                    ALUFlags[3:2] , Flags[3:2]); //->N,Z by logical operators AND, ORR
+                    ALUFlags[3:2] , Flags[3:2]); //N,Z by logical operators AND, ORR
 
 flopenr #(2) flagreg0(clk, reset, FlagWrite[0],
                     ALUFlags[1:0] , Flags[1:0]);
