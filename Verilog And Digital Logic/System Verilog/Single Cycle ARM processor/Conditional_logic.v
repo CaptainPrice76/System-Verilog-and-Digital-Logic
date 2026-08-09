@@ -8,8 +8,7 @@ module condlogic(input logic  clk,reset,
                 input logic    PCS,
                 output logic   PCSrc,
                 input logic [3:0] ALUFlags,  //->N,Z,C,V
-                input logic [1:0] FLagW,
-                    ) 
+                input logic [1:0] FLagW );
 
 logic [1:0] FlagWrite;
 logic [3:0] Flags;
@@ -21,6 +20,16 @@ flopenr #(2) flagreg1(clk, reset, FlagWrite[1],
 flopenr #(2) flagreg0(clk, reset, FlagWrite[0],
                     ALUFlags[1:0] , Flags[1:0]);
 
+
+//Write Control Signals
+condcheck cc(Cond, Flags, CondEx);
+assign FlagWrite = FlagW & {2{CondEx}};
+assign RegWrite = RegW & CondEx;
+assign MemWrite = MemW & CondEx;
+assign PCSrc = PCS & CondEx;
+endmodule
+
+
 module flopenr #(parameter Width = 2) 
                 (input logic clk, reset,
                 input logic               en,
@@ -29,20 +38,13 @@ module flopenr #(parameter Width = 2)
 
     always_ff @(posedge clk, posedge reset)
         
-        if(reset) q<=2'b0;
+        if(reset) q<=0;
         else if(en) q<=d;
 endmodule
 
 
-//Write Control Signals
-condcheck cc(Cond, Flags, CondEx);
-assign FlagWrite = FlagW & {2{CondEx}};
-assign RegWrite = RegW & CondEx;
-assign MemWrite = MemW & CondEx;
-assign PCSrc = PCS & CondEx
 
-
-module condcheck cc(input logic [3:0] Cond,
+module condcheck(input logic [3:0] Cond,
                     input logic [3:0] Flags,
                     output logic      CondEx);
         
