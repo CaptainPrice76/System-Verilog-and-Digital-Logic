@@ -29,7 +29,7 @@ module arm(input logic clk, reset,
                 ALUResult, WriteData, ReadData);
 endmodule
 
-// ____________________________________________
+
 
 
 //DataPath
